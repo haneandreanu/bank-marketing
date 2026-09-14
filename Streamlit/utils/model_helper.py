@@ -7,6 +7,48 @@ import streamlit as st
 from utils.custom_transformers import P95Capper
 from utils.constants import FEATURE_ORDER, MODEL_PATH
 
+# Register P95Capper
+import utils.custom_transformers as _ct_module
+sys.modules["__main__"].P95Capper = P95Capper
+sys.modules["utils.custom_transformers"].P95Capper = P95Capper
+
+# Add to modlue __mp_main__
+if "__mp_main__" not in sys.modules:
+    sys.modules["__mp_main__"] = sys.modules["__main__"]
+sys.modules["__mp_main__"].P95Capper = P95Capper
+
+
+@st.cache_resource
+def load_model():
+    obj = joblib.load(MODEL_PATH)
+    pipeline = obj["model"]
+
+    preprocessor = pipeline.named_steps['preprocessor']
+    for _, transformer, _ in preprocessor.transformers:
+        if hasattr(transformer, 'named_steps'):
+            for step_name, step in transformer.named_steps.items():
+                if type(step).__name__ == 'P95Capper':
+                    caps = step.__dict__.get('caps_')
+                    step.__class__ = P95Capper
+                    if caps is not None:
+                        step.caps_ = caps
+
+    return pipeline, float(obj["best_score"])
+
+
+def predict(df, pipeline):
+    df = df[FEATURE_ORDER].copy()
+    probas = pipeline.predict_proba(df)[:, 1]
+    preds  = (probas >= 0.5).astype(int)
+    return preds, probasimport sys
+import joblib
+import pandas as pd
+import numpy as np
+import streamlit as st
+
+from utils.custom_transformers import P95Capper
+from utils.constants import FEATURE_ORDER, MODEL_PATH
+
 sys.modules["__main__"].P95Capper = P95Capper
 
 
