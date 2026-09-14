@@ -19,26 +19,24 @@ sys.modules["__mp_main__"].P95Capper = P95Capper
 @st.cache_resource
 def load_model():
     import types
+    import pickle
+
+    class DebugUnpickler(pickle.Unpickler):
+        def find_class(self, module, name):
+            st.write(f"Looking for: {module}.{name}")
+            return super().find_class(module, name)
+
+    import io
+    with open(MODEL_PATH, "rb") as f:
+        data = f.read()
     
-    # Buat fake module utils.custom_transformers supaya joblib bisa find P95Capper
-    if "utils.custom_transformers" not in sys.modules:
-        fake_mod = types.ModuleType("utils.custom_transformers")
-        fake_mod.P95Capper = P95Capper
-        sys.modules["utils.custom_transformers"] = fake_mod
+    try:
+        DebugUnpickler(io.BytesIO(data)).load()
+    except Exception as e:
+        st.write(f"Debug error: {e}")
 
     obj = joblib.load(MODEL_PATH)
     pipeline = obj["model"]
-
-    preprocessor = pipeline.named_steps['preprocessor']
-    for _, transformer, _ in preprocessor.transformers:
-        if hasattr(transformer, 'named_steps'):
-            for step_name, step in transformer.named_steps.items():
-                if type(step).__name__ == 'P95Capper':
-                    caps = step.__dict__.get('caps_')
-                    step.__class__ = P95Capper
-                    if caps is not None:
-                        step.caps_ = caps
-
     return pipeline, float(obj["best_score"])
 
 
