@@ -16,6 +16,13 @@ sys.modules["__mp_main__"].P95Capper = P95Capper
 
 @st.cache_resource
 def load_model():
+    import os
+    from utils.constants import MODEL_PATH, BASE_DIR
+    st.write(f"BASE_DIR: {BASE_DIR}")
+    st.write(f"MODEL_PATH: {MODEL_PATH}")
+    st.write(f"File exists: {os.path.exists(MODEL_PATH)}")
+    st.write(f"Files in BASE_DIR: {os.listdir(BASE_DIR)}")
+
     obj = joblib.load(MODEL_PATH)
     pipeline = obj["model"]
 
