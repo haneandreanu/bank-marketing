@@ -18,12 +18,13 @@ sys.modules["__mp_main__"].P95Capper = P95Capper
 
 @st.cache_resource
 def load_model():
-    import os
-    from utils.constants import MODEL_PATH, BASE_DIR
-    st.write(f"BASE_DIR: {BASE_DIR}")
-    st.write(f"MODEL_PATH: {MODEL_PATH}")
-    st.write(f"File exists: {os.path.exists(MODEL_PATH)}")
-    st.write(f"Files in BASE_DIR: {os.listdir(BASE_DIR)}")
+    import types
+    
+    # Buat fake module utils.custom_transformers supaya joblib bisa find P95Capper
+    if "utils.custom_transformers" not in sys.modules:
+        fake_mod = types.ModuleType("utils.custom_transformers")
+        fake_mod.P95Capper = P95Capper
+        sys.modules["utils.custom_transformers"] = fake_mod
 
     obj = joblib.load(MODEL_PATH)
     pipeline = obj["model"]
