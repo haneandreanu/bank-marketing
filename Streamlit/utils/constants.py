@@ -53,4 +53,6 @@ SAMPLE_ROW = {
     "was_previously_contacted": 0
 }
 
-MODEL_PATH = "models/best_model.joblib"
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(BASE_DIR, "Streamlit", "models", "best_model.joblib")
