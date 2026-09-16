@@ -112,7 +112,7 @@ with tab_single:
         )
     with eco4:
         euribor3m = st.number_input(
-            "Euribor 3 Month Rate", value=3, step=0.001, format="%.3f",
+            "Euribor 3 Month Rate", value=3.0, step=0.001, format="%.3f",
             help="Suku bunga euribor 3 bulan harian"
         )
     with eco5:
