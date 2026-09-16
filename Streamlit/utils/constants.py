@@ -1,6 +1,6 @@
 FEATURE_ORDER = [
     "age", "job", "marital", "education", "default", "housing", "loan",
-    "contact", "month", "day_of_week", "duration", "campaign", "pdays",
+    "contact", "month", "day_of_week", "campaign", "pdays",
     "previous", "poutcome", "emp.var.rate", "cons.price.idx",
     "cons.conf.idx", "euribor3m", "nr.employed", "was_previously_contacted"
 ]
@@ -40,16 +40,15 @@ SAMPLE_ROW = {
     "contact": "cellular",
     "month": "may",
     "day_of_week": "mon",
-    "duration": 200,
     "campaign": 2,
     "pdays": 999,
     "previous": 0,
     "poutcome": "nonexistent",
-    "emp.var.rate": -1.8,
-    "cons.price.idx": 92.893,
-    "cons.conf.idx": -46.2,
-    "euribor3m": 1.313,
-    "nr.employed": 5099.1,
+    "emp.var.rate": 1.1,
+    "cons.price.idx": 93.994,
+    "cons.conf.idx": -36.4,
+    "euribor3m": 4.857,
+    "nr.employed": 5191.0,
     "was_previously_contacted": 0
 }
 
